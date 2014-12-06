@@ -1,0 +1,16 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/stevano/psb/env_rango"
+		}
+	],
+	"settings":
+	{
+		"python_interpreter_path": "/home/stevano/psb/env_rango/bin/python2.7",
+		"python_package_paths":
+		[
+			"/home/stevano/psb/env_rango/lib/python2.7/site-packages"
+		]
+	}
+}

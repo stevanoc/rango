@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}{{ category_name }}{% endblock %}
+
+{% block body_block %}
+    <br><a href="{% url 'index' %}">Back to Category List</a>
+    <div>
+        <h1>{{ category_name }}
+        {% if user.is_authenticated %}
+        <button id="likes" data-catid="{{ category.id }}" class="btn btn-primary" type="button">
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+            like
+        </button>
+        {% endif %}
+        </h1>
+    </div>
+	{% if category %}
+        <div class="row">
+            <div class="panel panel-primary">
+                <br/>
+                <form class="form-inline" id="user_form" method="post" action="{% url 'category' category.slug %}">
+                    {% csrf_token %}
+                    <!-- Display the search form elements here -->
+                    <input class="form-control" type="text" size="50" name="query" value="{{ query }}" id="query" />
+                    <input class="btn btn-primary" type="submit" name="submit" value="Search" />
+                    <br />
+                </form>
+                <div class="panel">
+                    {% if result_list %}
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Results</h3>
+                        <!-- Display search results in an ordered list -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                {% for result in result_list %}
+                                <div class="list-group-item">
+                                    <h4 class="list-group-item-heading"><a href="{% url 'category' result.slug %}">{{ result.name }}</a></h4>
+                                    <p class="list-group-item-text">views: {{ result.views }} likes: {{ result.likes }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>Views: {{ category.views }}</p>
+        <div id="like_count">{{ category.likes }} like(s)</div>
+        <br/>
+        {% if pages %}
+            <ul>
+                {% for page in pages %}
+                    <!-- <li><a href="{{ page.url }}">{{ page.title }}</a> {{ page.views }} views</li> -->
+					<li><a href="{% url 'goto' page.id %}">{{ page.title }}</a>
+                        {% if page.views > 1 %}
+                            ({{ page.views }} views)
+                        {% elif page.views == 1 %}
+                            ({{ page.views }} view)
+                        {% else %}
+                           (no view)
+                        {% endif %}
+                    </li>
+				{% endfor %}
+			</ul>
+        {% else %}
+            <strong>No pages currently in category.</strong>
+        {% endif %}
+        <br><a href="{% url 'add_page' category.slug %}">Add more pages</a>
+    {% else %}
+        <strong>The specified category {{ category_name }} does not exist!</strong>
+    {% endif %}
+{% endblock %}
